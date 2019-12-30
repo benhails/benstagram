@@ -2,22 +2,19 @@
 import React, { useState } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
+import axios from 'axios'
+import { ToastSuccess, ToastError } from './Toast'
 
+let currentUserId = ""
 
-const LoginForm = ({ toggleForm, hideModal }) => {
+const LoginForm = ({ toggleForm, hideAndResetModal }) => {
     
     const [formContent, setFormContent] = useState({
         username: "",
         password: ""
     }) // holds the form input as an object
 
-    // const [formContent, setFormContent] = useState() // this is an attempt to prevent the login details being removed on toggle but it doesn't work as code below is being executed before the default useState value is set
-    //     useEffect(() => {
-    //         setFormContent({
-    //             username: "",
-    //             password: ""
-    //         })
-    //         }, [])
+    const {username, password} = formContent
         
     const handleInput = e => {
         const value = e.target.value
@@ -34,11 +31,29 @@ const LoginForm = ({ toggleForm, hideModal }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        hideModal()
+
+        axios({
+            method: 'POST',
+            url: 'https://insta.nextacademy.com/api/v1/login',
+            data: {
+                username: username,
+                password: password
+            }
+        })
+        .then((response) => {
+            console.log(response.data.user.id)
+            
+            // Login in with localStorage
+            ToastSuccess("Welcome back! You've logged in successfully!")
+        })
+        .catch(error => {
+            console.error(error.response) // so that we know what went wrong if the request failed
+            ToastError("Your login failed - please try again!")
+        })
+
+        hideAndResetModal()
         console.log(formContent)
     }
-
-    const {username, password} = formContent
 
     const buttonDisabled = () => username === "" || password === ""
 
@@ -85,5 +100,6 @@ const LoginForm = ({ toggleForm, hideModal }) => {
 }
 
 export default LoginForm
-
+export { currentUserId }
+ 
 

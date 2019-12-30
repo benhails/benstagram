@@ -1,11 +1,10 @@
-
 import React from 'react'
-// import PersistentDrawerRight from './Components/Drawer'
 import { Route } from "react-router-dom"
 import HomePage from './Pages/HomePage'
 import UserProfilePage from './Pages/UserProfilePage'
 import MyNavbar from './Components/Navbar'
-
+import { ToastContainer } from 'react-toastify'
+// import { ToastContainerCenter } from './Components/Styled'
 
 
 function App() {
@@ -14,6 +13,8 @@ function App() {
     <div>
       <div>
         <MyNavbar />
+        <ToastContainer />
+        {/* <ToastContainerCenter /> */}
       </div>
       <div>
         <Route exact path="/" component={HomePage} />

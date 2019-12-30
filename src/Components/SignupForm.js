@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import axios from 'axios'
+import { ToastSuccess, ToastError } from './Toast'
 
 
-const SignupForm = ({ toggleForm, hideModal }) => {
+const SignupForm = ({ toggleForm, hideAndResetModal }) => {
 
     const [formContent, setFormContent] = useState({
         username: "",
@@ -13,17 +14,47 @@ const SignupForm = ({ toggleForm, hideModal }) => {
         confirmPassword: ""
     })
 
+    const {username, email, password, confirmPassword} = formContent
+
+    const [usernameValid, setUsernameValid] = useState(false);
+    const [delay, setDelay] = useState(null);
+
     const handleInput = e => {
+        clearTimeout(setDelay)
         const value = e.target.value
+        // const { value } = e.target   // this line is the same as the one above!
         setFormContent({
             ...formContent,
             [e.target.name]: value
         })
+        if (e.target.name === "username") {
+            let newDelay = setTimeout(() => handleUsernameCheck(value), 300)
+            setDelay(newDelay)
+        } 
     }
+
+    const handleUsernameCheck = username => {
+        if (username.length >= 6) {
+          axios
+            .get(
+              `https://insta.nextacademy.com/api/v1/users/check_name?username=${username}`
+            )
+            .then(response => {
+              if (response.data.valid) {
+                setUsernameValid(true);
+                console.log(response.data.valid)
+              } else {
+                setUsernameValid(false);
+                console.log(response.data.valid)
+              }
+            });
+        }
+      };
 
     const handleSubmit = (e) => {
 
         e.preventDefault()
+
         axios({
             method: 'POST',
             url: 'https://insta.nextacademy.com/api/v1/users/',
@@ -35,16 +66,16 @@ const SignupForm = ({ toggleForm, hideModal }) => {
         })
         .then(response => {
             console.log(response)
+            ToastSuccess("Your signup was successful and you've been logged in!")
         })
         .catch(error => {
-            console.error(error.response) // so that we know what went wrong if the request failed
+            console.error(error.response)
+            ToastError("Your signup failed - please try again!")
         })
         
-        hideModal()
+        hideAndResetModal()
         console.log(formContent)
     }
-
-    const {username, email, password, confirmPassword} = formContent
 
     const buttonDisabled = () => 
         username === "" || 
@@ -61,7 +92,8 @@ const SignupForm = ({ toggleForm, hideModal }) => {
                     placeholder="Enter username"
                     onChange={handleInput} 
                     name="username" 
-                    value={username} />                
+                    value={username}
+                    />                
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
                 <Form.Label>Email</Form.Label>

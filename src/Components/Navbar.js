@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom'
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
-import MyModal from './LoginModal';
+import AuthModal from './AuthModal';
+import { currentUserId } from './LoginForm'
 
-
-const MyNavbar = () => {
+const MainNavbar = () => {
   const [collapsed, setCollapsed] = useState(true);
-  const [modalShow, setModalShow] = useState(false);
 
   const toggleNavbar = () => setCollapsed(!collapsed);
-  const hideModal = () => setModalShow(false)
 
   return (
     <div>
@@ -19,19 +17,18 @@ const MyNavbar = () => {
         <Collapse isOpen={!collapsed} navbar>
           <Nav navbar>
             <NavItem>
-              <NavLink tag={Link} to="/users/1">My Profile</NavLink>
-              <NavLink onClick={() => setModalShow(true)}>Login</NavLink>
+              {/* <NavLink tag={Link} to={`/users/${currentUserId}`}>My Profile</NavLink> */}
+              <NavLink tag={Link} to={`/users/900`}>My Profile</NavLink> {/* Should really only show this based on whether someone is logged in or not */}
+            </NavItem>
+            <NavItem>
+              <AuthModal />
             </NavItem>
           </Nav>
         </Collapse>
       </Navbar>
-      <MyModal
-          show={modalShow}
-          hideModal={hideModal}         
-        />
       <hr></hr>
     </div>
   );
 }
 
-export default MyNavbar;
+export default MainNavbar;

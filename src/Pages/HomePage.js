@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { UserBlock } from '../Components/Styled'
+import { UserBlock, UserProfile } from '../Components/Styled'
 import 'typeface-roboto'
 import axios from 'axios'
 import UsersImages from '../Containers/UsersImages'
@@ -32,9 +32,11 @@ function HomePage() {
             <ImageLoadingIndicator isLoading={isLoading} width="200px" height="200px"/>
             {users.map(({id, username, profileImage}) => (
                 <UserBlock key={id}>
-                    <Link to={'users/'+id}>{id}: {username}</Link> 
-                    {ImagePlaceholder(profileImage)}
-                    <UsersImages id={id} />
+                    <UserProfile>
+                        {ImagePlaceholder(profileImage, "50%", "150")}
+                        <Link to={'users/'+id}>@{username}</Link> 
+                    </UserProfile>
+                    <UsersImages auth_token="" url={`https://insta.nextacademy.com/api/v1/images?userId=${id}`} />
                 </UserBlock>
             ))}
         </div>

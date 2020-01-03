@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react"
 import { useParams } from "react-router-dom"
-import { UserBlock } from "../Components/Styled"
+import { UserBlock, UserProfile } from "../Components/Styled"
 import ImagePlaceholder from "../Components/ImagePlaceholder"
 import UsersImages from "../Containers/UsersImages"
 import ImageLoadingIndicator from "../Components/ImageLoader"
@@ -27,11 +27,13 @@ const UserProfilePage = () => {
     
     return (
         <div>
-            <ImageLoadingIndicator isLoading={isLoading} width="200px" height="200px"/>
             <UserBlock key={userId}>
-                <div>{userId}: {user.username}</div> 
-                {ImagePlaceholder(user.profileImage)}
-                <UsersImages id={userId} />
+                <ImageLoadingIndicator isLoading={isLoading} width="200px" height="200px"/>
+                <UserProfile> 
+                    {ImagePlaceholder(user.profileImage, "50%", "150")}
+                    @{user.username}
+                </UserProfile>
+                <UsersImages auth_token="" url={`https://insta.nextacademy.com/api/v1/images?userId=${userId}`} />
             </UserBlock>
         </div>
         )

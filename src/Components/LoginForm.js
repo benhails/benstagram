@@ -1,13 +1,10 @@
-// import React, {useState, useEffect} from 'react'
 import React, { useState } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import axios from 'axios'
 import { ToastSuccess, ToastError } from './Toast'
 
-let currentUserId = ""
-
-const LoginForm = ({ toggleForm, hideAndResetModal }) => {
+const LoginForm = ({ toggleForm, hideAndResetModal, handleLogin }) => {
     
     const [formContent, setFormContent] = useState({
         username: "",
@@ -24,11 +21,6 @@ const LoginForm = ({ toggleForm, hideAndResetModal }) => {
         })
     }
 
-    //   if (!e.target.value.includes('!')) {
-    //     setFormContent({username: e.target.value})
-    //     console.log(formContent)
-    //   }
-
     const handleSubmit = (e) => {
         e.preventDefault()
 
@@ -36,19 +28,26 @@ const LoginForm = ({ toggleForm, hideAndResetModal }) => {
             method: 'POST',
             url: 'https://insta.nextacademy.com/api/v1/login',
             data: {
-                username: username,
+                username: username, // can replace with username, for shorthand
                 password: password
             }
         })
-        .then((response) => {
-            console.log(response.data.user.id)
-            
-            // Login in with localStorage
-            ToastSuccess("Welcome back! You've logged in successfully!")
+        .then(({
+            data: { 
+                auth_token,
+                user: {
+                    username
+                } 
+            }
+        }) => {
+            localStorage.setItem('jwt', auth_token)
+            localStorage.setItem('username', username)
+            ToastSuccess(`Welcome back ${username}! You've logged in successfully!`)
+            handleLogin()
         })
-        .catch(error => {
-            console.error(error.response) // so that we know what went wrong if the request failed
-            ToastError("Your login failed - please try again!")
+        .catch(({response}) => {
+            console.error(response) // only one error message for login
+            ToastError("Your login failed - please check your username and password then try again!")
         })
 
         hideAndResetModal()
@@ -100,6 +99,5 @@ const LoginForm = ({ toggleForm, hideAndResetModal }) => {
 }
 
 export default LoginForm
-export { currentUserId }
  
 

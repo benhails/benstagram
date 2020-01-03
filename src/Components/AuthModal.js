@@ -8,7 +8,7 @@ import LoginForm from './LoginForm'
 import SignupForm from './SignupForm' 
 
 
-function AuthModal() {
+function AuthModal({ handleLogin }) {
   const [modalShow, setModalShow] = useState(false);
   const [isLoginForm, setIsLoginForm] = useState(true); // controls the type of form shown to the user    
   // console.log(isLoginForm)
@@ -42,8 +42,8 @@ function AuthModal() {
         <Modal.Body>
           {
             isLoginForm ?
-              <LoginForm toggleForm={toggleForm} hideAndResetModal={hideAndResetModal} /> :
-              <SignupForm toggleForm={toggleForm} hideAndResetModal={hideAndResetModal} />
+              <LoginForm toggleForm={toggleForm} hideAndResetModal={hideAndResetModal} handleLogin={handleLogin}/> :
+              <SignupForm toggleForm={toggleForm} hideAndResetModal={hideAndResetModal} handleLogin={handleLogin} />
           }
         </Modal.Body>
         {/* <Modal.Footer>

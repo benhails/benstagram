@@ -61,6 +61,7 @@ const ImageUploadForm = () => {
                 name="image-file"
                 multiple={false} // actually the default of this is false so this isn't really needed
                 onChange={handleFile}
+                capture
             />
             <label htmlFor="file">{imageFile ? imageFile.name : "Choose a file"}</label>
             <Button

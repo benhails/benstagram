@@ -7,9 +7,6 @@ import ImagePlaceholder from '../Components/ImagePlaceholder'
 import ImageLoadingIndicator from '../Components/ImageLoader'
 import { Link } from 'react-router-dom'
 
-// test
-// test 2
-
 function HomePage() {
 
     const [users, setUsers] = useState([])
